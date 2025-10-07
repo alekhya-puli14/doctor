@@ -1,0 +1,8 @@
+Flask
+flask-session
+firebase-admin
+boto3
+numpy
+tensorflow
+matplotlib
+opencv-python

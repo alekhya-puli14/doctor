@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>COVID Detection</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+      
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: url('../static/coo.jpg') no-repeat center center/cover;
+        color:white;
+        text-align: center;
+        position: relative;
+      }
+      
+      /* Overlay for better text visibility */
+      body::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        
+        z-index: -1;
+      }
+      
+      .container {
+        background: rgba(255, 255, 255, 0.15);
+        padding: 30px;
+        border-radius: 16px;
+        backdrop-filter: blur(15px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        width: 90%;
+        max-width: 500px;
+        transition: 0.3s ease-in-out;
+      }
+      
+      h2 {
+        margin-bottom: 20px;
+        font-size: 28px;
+        font-weight: 600;
+        letter-spacing: 1px;
+      }
+      
+      input[type="file"] {
+        display: none;
+      }
+      
+      .file-label {
+        display: inline-block;
+        background: linear-gradient(135deg, #ff6b6b, #ff4757);
+        color: white;
+        padding: 14px 22px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 17px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+      }
+      
+      .file-label:hover {
+        background: linear-gradient(135deg, #ff4757, #e84118);
+        transform: scale(1.05);
+      }
+      
+      button {
+        background: linear-gradient(135deg, #28a745, #218838);
+        color: white;
+        padding: 14px 22px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 17px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        margin-top: 12px;
+      }
+      
+      button:hover {
+        background: linear-gradient(135deg, #218838, #1e7e34);
+        transform: scale(1.05);
+      }
+      
+      .result-container {
+        margin-top: 20px;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 14px;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        transition: 0.3s ease-in-out;
+      }
+      
+      img {
+        width: 100%;
+        max-width: 320px;
+        border-radius: 10px;
+        margin-top: 12px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+        transition: 0.3s ease-in-out;
+      }
+      
+      img:hover {
+        transform: scale(1.05);
+      }
+      
+      .confidence {
+        font-size: 20px;
+        font-weight: bold;
+        margin-top: 6px;
+        color: #ffd700;
+      }
+      .home-button {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        text-decoration: none;
+        background: linear-gradient(135deg, #ff6b6b, #ff4757);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .home-button:hover {
+        background: linear-gradient(135deg, #ff4757, #e84118);
+        transform: scale(1.05);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Appointments Button - Bottom Center */
+    .appointments-button {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        text-decoration: none;
+        background: linear-gradient(135deg, #28a745, #218838);
+        color: white;
+        padding: 14px 24px;
+        border-radius: 8px;
+        font-size: 18px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .appointments-button:hover {
+        background: linear-gradient(135deg, #218838, #1e7e34);
+        
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+    }
+      
+    </style>
+  </head>
+  <body>
+    <a href="index.html" class="home-button">Home</a>
+
+    <!-- Appointments Button (Bottom Center) -->
+    <a href="appointments.html" class="appointments-button">Appointments</a>
+    <div class="container">
+      <h2>Upload Chest X-ray for COVID Detection</h2>
+      <form action="/covid" method="post" enctype="multipart/form-data">
+        <label for="file-upload" class="file-label">Choose File</label>
+        <input
+          type="file"
+          name="file"
+          id="file-upload"
+          required
+          onchange="updateFileName()"
+        />
+        <p
+          id="file-name"
+          style="color: #ccc; font-size: 14px; margin-top: 5px"
+        ></p>
+        <button type="submit">Upload & Predict</button>
+      </form>
+
+      {% if processed_file %}
+      <div class="result-container">
+        <h3>Uploaded Image:</h3>
+        <img src="{{ processed_file }}" alt="Uploaded Image" />
+        <h3>Prediction: {{ result }}</h3>
+        <p class="confidence">Confidence: {{ confidence }}%</p>
+      </div>
+      {% endif %}
+    </div>
+    <script>
+        function updateFileName() {
+            const fileInput = document.getElementById('file-upload');
+            const fileNameDisplay = document.getElementById('file-name');
+            if (fileInput.files.length > 0) {
+                fileNameDisplay.textContent = "Selected File: " + fileInput.files[0].name;
+            } else {
+                fileNameDisplay.textContent = "";
+            }
+        }
+    </script>
+  </body>
+</html>

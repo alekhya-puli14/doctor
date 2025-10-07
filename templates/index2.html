@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Appointment Booking</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Book an Appointment</h2>
+
+        <label for="disease">Select Disease:</label>
+        <select id="disease" onchange="showDoctors()">
+            <option value="">-- Select --</option>
+            <option value="pneumonia">Pneumonia</option>
+            <option value="tuberculosis">Tuberculosis</option>
+            <option value="asthma">Asthma</option>
+        </select>
+
+        <div id="doctorList"></div>
+    </div>
+
+    <script src="../static/script.js"></script>
+</body>
+</html>
