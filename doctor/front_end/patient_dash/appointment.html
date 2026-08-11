@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lung Predict - Book Appointment</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #e0f7fa, #f0fdf4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    header {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      background-color: #fff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 15px 30px;
+    }
+
+    header img { width: 50px; height: 50px; margin-right: 15px; }
+    header h1 { color: #00796b; font-size: 25px; font-weight: 700; }
+
+    .content-box, .confirmation-box {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      width: 80%;
+      max-width: 700px;
+      padding: 40px;
+      margin-top: 60px;
+      border-top: 5px solid #009688;
+    }
+
+    h2 { 
+      color: #00796b; 
+      text-align: center; 
+      margin-bottom: 30px; 
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .form-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .form-row label {
+      flex: 1;
+      text-align: right;
+      color: #333;
+      font-weight: 500;
+    }
+
+    .form-row input,
+    .form-row select {
+      flex: 2;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+      outline: none;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .form-row input:focus, .form-row select:focus {
+      border-color: #009688;
+      box-shadow: 0 0 4px rgba(0,150,136,0.3);
+    }
+
+    button {
+      background: #009688;
+      color: white;
+      border: none;
+      padding: 10px 25px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      width: 40%;
+      margin: 20px auto 0;
+      display: block;
+    }
+
+    button:hover { background: #00796b; }
+
+    .back-btn {
+      display: inline-block;
+      margin-top: 25px;
+      background: #009688;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: 0.3s;
+      text-align: center;
+    }
+
+    .back-btn:hover { background: #00796b; }
+
+    .confirmation-box {
+      text-align: center;
+    }
+
+    .confirmation-box p {
+      font-size: 18px;
+      margin: 10px 0;
+    }
+
+    .confirmation-box h3 {
+      color: #00796b;
+      margin-bottom: 20px;
+      font-size: 22px;
+    }
+
+    @media (max-width: 600px) {
+      .form-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .form-row label {
+        text-align: left;
+      }
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="../images/lg1.png" alt="Lung Predict Logo">
+    <h1>Lung Predict</h1>
+  </header>
+
+  <!-- Appointment Form -->
+  <div class="content-box" id="appointmentForm">
+    <h2>Book Appointment</h2>
+    <form id="bookForm">
+      <div class="form-row">
+        <label for="name">Full Name:</label>
+        <input type="text" id="name" placeholder="Enter your name" required>
+      </div>
+
+      <div class="form-row">
+        <label for="phone">Phone Number:</label>
+        <input type="tel" id="phone" placeholder="Enter your contact number" required>
+      </div>
+
+      <div class="form-row">
+        <label for="disease">Disease / Symptoms:</label>
+        <select id="disease" required>
+          <option value="">Select Disease</option>
+          <option value="Pneumonia">Pneumonia</option>
+          <option value="Tuberculosis">Tuberculosis</option>
+          <option value="Lung Cancer">Lung Cancer</option>
+          <option value="COVID-19">COVID-19</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <label for="doctor">Choose Doctor:</label>
+        <select id="doctor" required>
+          <option value="">Select Doctor</option>
+          <option value="Dr. Meera">Dr. Meera (Pulmonologist)</option>
+          <option value="Dr. Rajesh">Dr. Rajesh (Respiratory Specialist)</option>
+          <option value="Dr. Anita">Dr. Anita (General Physician)</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <label for="mode">Mode:</label>
+        <select id="mode" required>
+          <option value="">Select Mode</option>
+          <option value="Online">Online</option>
+          <option value="Offline">Offline</option>
+        </select>
+      </div>
+
+      <button type="submit">Book Now</button>
+    </form>
+
+    <!-- Fixed Back Button -->
+    <a href="../patient.html" class="back-btn">← Back to Dashboard</a>
+  </div>
+
+  <!-- Confirmation Box -->
+  <div class="confirmation-box" id="confirmationBox" style="display:none;">
+    <h3 id="doctorName"></h3>
+    <p><strong>Contact No:</strong> <span id="contactNo"></span></p>
+    <p><strong>Clinic:</strong> <span id="clinic"></span></p>
+    <p><strong>Time Duration:</strong> <span id="timeDuration"></span></p>
+    <p><strong>Profile:</strong> <span id="profile"></span></p>
+    <p id="onlineInfo" style="display:none;"><strong>Online Access ID:</strong> <span id="onlineID"></span></p>
+    
+    <!-- Fixed Back Button -->
+    <a href="../patient.html" class="back-btn">← Back to Dashboard</a>
+  </div>
+
+  <script>
+    document.getElementById("bookForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      // Get form values
+      const name = document.getElementById("name").value;
+      const phone = document.getElementById("phone").value;
+      const disease = document.getElementById("disease").value;
+      const doctor = document.getElementById("doctor").value;
+      const mode = document.getElementById("mode").value;
+
+      // Hide form, show confirmation
+      document.getElementById("appointmentForm").style.display = "none";
+      document.getElementById("confirmationBox").style.display = "block";
+
+      // Dummy details for profile & clinic
+      let profile = "";
+      if (doctor === "Dr. Meera") profile = "Pulmonologist";
+      else if (doctor === "Dr. Rajesh") profile = "Respiratory Specialist";
+      else profile = "General Physician";
+
+      // Set confirmation details
+      document.getElementById("doctorName").textContent = doctor;
+      document.getElementById("contactNo").textContent = "+91 " + phone;
+      document.getElementById("clinic").textContent = "Lung Care Clinic, Chennai";
+      document.getElementById("timeDuration").textContent = "6 PM - 7 PM";
+      document.getElementById("profile").textContent = profile;
+
+      // Online access ID if needed
+      if(mode === "Online") {
+        document.getElementById("onlineInfo").style.display = "block";
+        document.getElementById("onlineID").textContent = "Meet ID: LP-" + Math.floor(Math.random()*10000);
+      } else {
+        document.getElementById("onlineInfo").style.display = "none";
+      }
+    });
+  </script>
+</body>
+</html>

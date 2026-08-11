@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Profile</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2 id="doctorName"></h2>
+<p><strong>Contact:</strong> <span id="doctorContact"></span></p>
+<p><strong>Clinic:</strong> <span id="doctorClinic"></span></p>
+<p><strong>Profile:</strong> <span id="doctorProfile"></span></p>
+
+<!-- Buttons for Booking -->
+<button id="onlineBtn">Book Online Appointment</button>
+<button id="offlineBtn">Book Offline Appointment</button>
+
+<script>
+    function getQueryParams() {
+        const params = new URLSearchParams(window.location.search);
+        return {
+            name: params.get("name"),
+            contact: params.get("contact"),
+            clinic: params.get("clinic"),
+            profile: params.get("profile"),
+            disease: params.get("disease") 
+        };
+    }
+
+    window.onload = function() {
+        const doctor = getQueryParams();
+
+        if (doctor.name) {
+            document.getElementById("doctorName").innerText = doctor.name;
+            document.getElementById("doctorContact").innerText = doctor.contact;
+            document.getElementById("doctorClinic").innerText = doctor.clinic;
+            document.getElementById("doctorProfile").innerText = doctor.profile;
+        } else {
+            document.getElementById("doctorName").innerText = "Doctor Not Found";
+        }
+
+        document.getElementById("onlineBtn").onclick = function() {
+    window.location.href = `/online?name=${encodeURIComponent(doctor.name)}&disease=${doctor.disease}`;
+};
+
+document.getElementById("offlineBtn").onclick = function() {
+    window.location.href = `/offline?name=${encodeURIComponent(doctor.name)}`;
+};
+
+    };
+</script>
+
+
+</body>
+</html>

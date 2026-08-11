@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Center</title>
+    <style>
+        /* General Styles */
+        body, h1, h2, p {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-image: url("{{ url_for('static', filename='back.jpg') }}") no-repeat center center/cover;
+            color: white;
+            text-align: center;
+        }
+
+        /* Navigation Bar */
+        header {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        header h1 {
+            text-align: center;
+            color: white;
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            padding: 10px;
+        }
+
+        nav ul li {
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        nav ul li a:hover {
+            color: #f4b400;
+        }
+
+        /* Sections */
+        section {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+        }
+
+        .content {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            color: black;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        img {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        /* Appointment Form */
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        input, button {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: none;
+        }
+
+        button {
+            background: #28a745;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #218838;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <header>
+        <h1>HealthCare Center</h1>
+        <nav>
+            <ul>
+                <li><a href="#xray">X-Ray</a></li>
+                <li><a href="#appointments">Appointments</a></li>
+                <li><a href="#about">About Us</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- X-Ray Section -->
+    <section id="xray">
+        <div class="content">
+            <h2>X-Ray Services</h2>
+            <p>We provide high-quality X-ray services with advanced imaging technology to ensure accurate diagnosis.</p>
+            <img src="xray.jpg" alt="X-ray Image">
+        </div>
+    </section>
+
+    <!-- Appointments Section -->
+    <section id="appointments">
+        <div class="content">
+            <h2>Book an Appointment</h2>
+            <form id="appointmentForm">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" required>
+
+                <label for="email">Email</label>
+                <input type="email" id="email" required>
+
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" required>
+
+                <label for="date">Select Date</label>
+                <input type="date" id="date" required>
+
+                <label for="time">Select Time</label>
+                <input type="time" id="time" required>
+
+                <button type="submit">Book Appointment</button>
+            </form>
+            <p class="message" id="confirmationMessage"></p>
+        </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section id="about">
+        <div class="content">
+            <h2>About Us</h2>
+            <p>Welcome to HealthCare Center! We provide top-notch medical services with expert doctors. Our mission is to ensure better health for everyone.</p>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <div class="content">
+            <h2>Contact Us</h2>
+            <p>Email: contact@healthcare.com</p>
+            <p>Phone: +91 9876543210</p>
+            <p>Address: 123 Health Street, Chennai, India</p>
+        </div>
+    </section>
+
+    <!-- JavaScript -->
+    <script>
+        document.getElementById('appointmentForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            let name = document.getElementById('name').value;
+            let email = document.getElementById('email').value;
+            let phone = document.getElementById('phone').value;
+            let date = document.getElementById('date').value;
+            let time = document.getElementById('time').value;
+
+            if (name && email && phone && date && time) {
+                document.getElementById('confirmationMessage').innerText = `✅ Appointment booked for ${name} on ${date} at ${time}.`;
+                document.getElementById('confirmationMessage').style.color = "green";
+                this.reset();
+            }
+        });
+    </script>
+
+</body>
+</html>

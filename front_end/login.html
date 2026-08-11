@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Role-Based Login | Automated Lung Disease Detection</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #2193b0, #6dd5ed);
+      position: relative;
+    }
+
+    /* Logo Section */
+    .header {
+      position: absolute;
+      top: 20px;
+      left: 25px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #fff;
+    }
+
+    .header img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 0 8px rgba(0,0,0,0.2);
+    }
+
+    .header h1 {
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .container {
+      background: #fff;
+      padding: 40px;
+      border-radius: 18px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      width: 400px;
+      animation: fadeIn 1s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      color: #333;
+      margin-bottom: 10px;
+      font-size: 26px;
+      font-weight: 600;
+    }
+
+    p {
+      color: #555;
+      font-size: 14px;
+      margin-bottom: 25px;
+    }
+
+    .roles {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .role {
+      flex: 1;
+      margin: 0 8px;
+      padding: 15px 0;
+      border: 2px solid #2193b0;
+      border-radius: 10px;
+      color: #2193b0;
+      font-weight: 500;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+      background: #fff;
+    }
+
+    .role:hover {
+      background: #2193b0;
+      color: #fff;
+      transform: translateY(-3px);
+    }
+
+    .role.active {
+      background: #2193b0;
+      color: #fff;
+      box-shadow: 0 0 10px rgba(33, 147, 176, 0.5);
+    }
+
+    .login-form {
+      margin-top: 25px;
+      text-align: left;
+      display: none;
+      animation: fadeSlide 0.4s ease;
+    }
+
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .input-group {
+      margin-bottom: 15px;
+    }
+
+    .input-group label {
+      font-size: 14px;
+      font-weight: 500;
+      color: #333;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 10px;
+      border: 1.5px solid #ccc;
+      border-radius: 8px;
+      outline: none;
+      font-size: 14px;
+      transition: 0.3s;
+    }
+
+    .input-group input:focus {
+      border-color: #2193b0;
+    }
+
+    .login-btn {
+      width: 100%;
+      background: #2193b0;
+      color: #fff;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      padding: 12px;
+      cursor: pointer;
+      transition: 0.3s;
+      font-size: 15px;
+      margin-top: 10px;
+    }
+
+    .login-btn:hover {
+      background: #176b8a;
+    }
+
+    .footer-text {
+      text-align: center;
+      font-size: 13px;
+      color: #666;
+      margin-top: 15px;
+    }
+
+    .footer-text a {
+      color: #2193b0;
+      text-decoration: none;
+    }
+
+    .footer-text a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Logo + Title -->
+  <div class="header">
+    <img src="images/lg1.png" alt="Lung Predict Logo">
+    <h1>Lung Predict</h1>
+  </div>
+
+  <!-- Login Container -->
+  <div class="container">
+    <h2>Select Your Role</h2>
+    <p>Please choose your role to continue</p>
+
+    <div class="roles">
+      <div class="role" id="doctor">Doctor</div>
+      <div class="role" id="patient">Patient</div>
+      <div class="role" id="admin">Admin</div>
+    </div>
+
+    <!-- Dynamic Login Form -->
+    <div class="login-form" id="loginForm">
+      <h3 id="roleTitle" style="text-align:center; color:#2193b0; margin-bottom:15px;"></h3>
+
+      <div class="input-group">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" placeholder="Enter your full name" required>
+      </div>
+
+      <div class="input-group">
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" placeholder="Enter your phone number" required>
+      </div>
+
+      <div class="input-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="Enter your email" required>
+      </div>
+
+      <div class="input-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Enter your password" required>
+      </div>
+
+      <button class="login-btn" id="loginBtn">Login</button>
+
+      <p class="footer-text">Don’t have an account? <a href="#">Sign Up</a></p>
+    </div>
+  </div>
+
+  <script>
+    const roles = document.querySelectorAll('.role');
+    const loginForm = document.getElementById('loginForm');
+    const roleTitle = document.getElementById('roleTitle');
+    const loginBtn = document.getElementById('loginBtn');
+    let selectedRole = '';
+
+    roles.forEach(role => {
+      role.addEventListener('click', () => {
+        roles.forEach(r => r.classList.remove('active'));
+        role.classList.add('active');
+        selectedRole = role.textContent;
+        roleTitle.textContent = `${selectedRole} Login`;
+        loginForm.style.display = "block";
+      });
+    });
+
+    loginBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+
+      if (selectedRole === '') {
+        alert('Please select a role first.');
+        return;
+      }
+
+      // Redirect based on role
+      if (selectedRole === 'Doctor') {
+        window.location.href = "doctor.html";
+      } else if (selectedRole === 'Patient') {
+        window.location.href = "patient.html";
+      } else if (selectedRole === 'Admin') {
+        window.location.href = "admin.html";
+      }
+    });
+  </script>
+</body>
+</html>

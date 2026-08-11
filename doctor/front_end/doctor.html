@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lung Predict - Doctor Dashboard</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f3f6fb;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+
+    /* Navbar */
+    .navbar {
+      background-color: #ffffff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 40px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+    }
+
+    .logo h1 {
+      color: #2563eb;
+      font-size: 22px;
+      margin: 0;
+      font-weight: 700;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 25px;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: #2563eb;
+    }
+
+    /* Logout Button */
+    .logout-btn {
+      background-color: #ef4444;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .logout-btn:hover {
+      background-color: #dc2626;
+    }
+
+    /* Sections */
+    .section {
+      display: none;
+      padding: 30px 50px;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    /* Doctor container */
+    .doctor-container {
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      padding: 40px;
+      max-width: 1000px;
+      margin: 40px auto;
+      text-align: center;
+    }
+
+    .doctor-container h2 {
+      margin-bottom: 10px;
+    }
+
+    .doctor-container p {
+      color: #555;
+    }
+
+    /* Dashboard cards */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 25px;
+      margin-top: 30px;
+      justify-items: center;
+    }
+
+    .card {
+      width: 200px;
+      padding: 25px;
+      border-radius: 18px;
+      background: white;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s;
+      position: relative;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
+    }
+
+    .icon {
+      font-size: 36px;
+      margin-bottom: 10px;
+      animation: float 2s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    .card h2 {
+      margin: 0;
+      font-size: 32px;
+      font-weight: 700;
+    }
+
+    .card p {
+      margin-top: 8px;
+      color: #555;
+      font-weight: 500;
+    }
+
+    .blue { background: linear-gradient(145deg, #dbeafe, #eff6ff); }
+    .green { background: linear-gradient(145deg, #dcfce7, #ecfdf5); }
+    .red { background: linear-gradient(145deg, #fee2e2, #fef2f2); }
+    .purple { background: linear-gradient(145deg, #ede9fe, #f5f3ff); }
+
+    /* Table styling */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+      background-color: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    th, td {
+      text-align: left;
+      padding: 12px 15px;
+      border-bottom: 1px solid #eee;
+    }
+
+    th {
+      background-color: #2563eb;
+      color: white;
+      font-weight: 600;
+    }
+
+    tr:hover {
+      background-color: #f9fafb;
+    }
+
+    #detailsContainer {
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="logo">
+      <img src="images/lg1.png" alt="Lung Predict Logo">
+      <h1>Lung Predict</h1>
+    </div>
+    <div class="nav-links">
+      <a href="#" class="active" onclick="showSection('dashboard')">Dashboard</a>
+      <a href="#" onclick="showSection('patients')">Patients</a>
+      <a href="#" onclick="showSection('schedule')">Schedule</a>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <!-- Dashboard Section -->
+  <div id="dashboard" class="section active">
+    <div class="doctor-container">
+      <h2>Good Morning, Dr. Martinez</h2>
+      <p>Here's your clinical overview for today</p>
+
+      <div class="cards">
+        <div class="card blue" onclick="showDetails('patientsList')">
+          <div class="icon">🧑‍⚕️</div>
+          <h2>5</h2>
+          <p>Today's Patients</p>
+        </div>
+        <div class="card green" onclick="showDetails('reportsList')">
+          <div class="icon">📄</div>
+          <h2>3</h2>
+          <p>Pending Reports</p>
+        </div>
+        <div class="card red" onclick="showDetails('alertsList')">
+          <div class="icon">🚨</div>
+          <h2>3</h2>
+          <p>Critical Alerts</p>
+        </div>
+        <div class="card purple" onclick="showDetails('videoList')">
+          <div class="icon">🎥</div>
+          <h2>4</h2>
+          <p>Video Calls</p>
+        </div>
+      </div>
+
+      <div id="detailsContainer"></div>
+    </div>
+  </div>
+
+  <!-- Patients Section -->
+  <div id="patients" class="section">
+    <h2>Patients</h2>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Condition</th>
+        <th>Status</th>
+      </tr>
+      <tr>
+        <td>Emma Williams</td>
+        <td>Chronic Cough</td>
+        <td style="color:#b91c1c;">High</td>
+      </tr>
+      <tr>
+        <td>Michael Chen</td>
+        <td>Asthma</td>
+        <td style="color:#ca8a04;">Medium</td>
+      </tr>
+      <tr>
+        <td>Sophia Brown</td>
+        <td>COPD</td>
+        <td style="color:#15803d;">Stable</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Schedule Section -->
+  <div id="schedule" class="section">
+    <h2>Today's Schedule</h2>
+    <table>
+      <tr>
+        <th>Time</th>
+        <th>Patient</th>
+        <th>Purpose</th>
+        <th>Mode</th>
+      </tr>
+      <tr>
+        <td>09:00 AM</td>
+        <td>Emma Williams</td>
+        <td>Chronic Cough Evaluation</td>
+        <td>Offline</td>
+      </tr>
+      <tr>
+        <td>10:30 AM</td>
+        <td>Michael Chen</td>
+        <td>Asthma Follow-up</td>
+        <td>Online</td>
+      </tr>
+      <tr>
+        <td>11:15 AM</td>
+        <td>Sophia Brown</td>
+        <td>COPD Checkup</td>
+        <td>Offline</td>
+      </tr>
+      <tr>
+        <td>02:00 PM</td>
+        <td>John Davis</td>
+        <td>Video Consultation</td>
+        <td>Online</td>
+      </tr>
+    </table>
+  </div>
+
+  <script>
+    function showSection(sectionId) {
+      document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+      document.getElementById(sectionId).classList.add('active');
+      document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+
+    function showDetails(type) {
+      const container = document.getElementById("detailsContainer");
+      let html = "";
+
+      if (type === "patientsList") {
+        html = `
+          <h3>Today's Patients</h3>
+          <table>
+            <tr><th>Patient Name</th><th>Condition</th></tr>
+            <tr><td>Emma Williams</td><td>Chronic Cough</td></tr>
+            <tr><td>Michael Chen</td><td>Asthma</td></tr>
+            <tr><td>Sophia Brown</td><td>COPD</td></tr>
+            <tr><td>John Davis</td><td>Bronchitis</td></tr>
+          </table>`;
+      } else if (type === "reportsList") {
+        html = `
+          <h3>Pending Reports - Lung Diseases</h3>
+          <table>
+            <tr><th>Report ID</th><th>Patient Name</th><th>Status</th></tr>
+            <tr><td>RPT001</td><td>Emma Williams</td><td>Awaiting Doctor Review</td></tr>
+            <tr><td>RPT002</td><td>John Davis</td><td>Pending AI Analysis</td></tr>
+            <tr><td>RPT003</td><td>Olivia Lee</td><td>In Progress</td></tr>
+          </table>`;
+      } else if (type === "alertsList") {
+        html = `
+          <h3>Critical Alerts</h3>
+          <table>
+            <tr><th>Patient</th><th>Alert</th></tr>
+            <tr><td>Emma Williams</td><td>Severe cough and breathing difficulty</td></tr>
+            <tr><td>Michael Chen</td><td>Low oxygen saturation detected</td></tr>
+            <tr><td>Sophia Brown</td><td>Worsening COPD symptoms</td></tr>
+          </table>`;
+      } else if (type === "videoList") {
+        html = `
+          <h3>Scheduled Video Calls</h3>
+          <table>
+            <tr><th>Time</th><th>Patient</th></tr>
+            <tr><td>09:00 AM</td><td>Emma Williams</td></tr>
+            <tr><td>11:30 AM</td><td>Michael Chen</td></tr>
+            <tr><td>01:00 PM</td><td>John Davis</td></tr>
+            <tr><td>03:15 PM</td><td>Sophia Brown</td></tr>
+          </table>`;
+      }
+
+      container.innerHTML = html;
+    }
+
+    function logout() {
+      window.location.href = "login.html";
+    }
+  </script>
+</body>
+</html>

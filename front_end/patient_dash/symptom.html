@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lung Predict - AI Symptom Checker</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #e0f7fa, #f0fdf4);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    header {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      padding: 15px 20px;
+    }
+
+    header img {
+      width: 50px;
+      height: 50px;
+      margin-right: 10px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+    }
+
+    header h1 {
+      color: #00796b;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .back-btn {
+      background: #007bff;
+      color: white;
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+
+    .back-btn:hover {
+      background: #005fa3;
+    }
+
+    .container {
+      background: white;
+      border-radius: 16px;
+      padding: 25px;
+      margin-top: 30px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      animation: fadeIn 0.6s ease;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(15px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    h2 {
+      color: #00796b;
+      margin-bottom: 15px;
+      font-size: 20px;
+      text-align: center;
+    }
+
+    .symptom-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .symptom-btn {
+      background: #f5f5f5;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 15px;
+      transition: 0.3s;
+    }
+
+    .symptom-btn.selected {
+      background: #007bff;
+      color: white;
+      font-weight: 600;
+    }
+
+    .selected-section {
+      margin-top: 20px;
+      background: #f9f9f9;
+      border-radius: 10px;
+      padding: 15px;
+    }
+
+    .chip {
+      background: #dbeafe;
+      color: #1e3a8a;
+      border-radius: 20px;
+      padding: 5px 10px;
+      display: inline-flex;
+      align-items: center;
+      margin: 4px;
+      font-size: 14px;
+    }
+
+    .chip button {
+      background: transparent;
+      border: none;
+      color: #1e3a8a;
+      font-weight: bold;
+      margin-left: 5px;
+      cursor: pointer;
+    }
+
+    .severity-options {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 15px 0;
+    }
+
+    .severity-btn {
+      border: none;
+      border-radius: 8px;
+      padding: 10px 15px;
+      cursor: pointer;
+      background: #eee;
+      transition: 0.3s;
+      font-weight: 500;
+    }
+
+    .severity-btn.active {
+      background: #007bff;
+      color: white;
+    }
+
+    .analyze-btn {
+      width: 100%;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .analyze-btn:hover {
+      background: #005fa3;
+    }
+
+    /* Popup box */
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+      width: 85%;
+      max-width: 400px;
+      padding: 25px;
+      text-align: center;
+      display: none;
+      animation: fadeInPop 0.3s ease forwards;
+    }
+
+    @keyframes fadeInPop {
+      from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+      to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
+
+    .popup h3 {
+      color: #00796b;
+      margin-bottom: 15px;
+    }
+
+    .popup p {
+      color: #333;
+      font-size: 15px;
+    }
+
+    .close-btn {
+      margin-top: 20px;
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .close-btn:hover {
+      background: #005fa3;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.3);
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-left">
+      <img src="images/lg1.png" alt="Lung Predict Logo">
+
+      <h1>Lung Predict</h1>
+    </div>
+    <a href="../patient.html" class="back-btn">Back</a>
+
+
+  </header>
+
+  <div class="container">
+    <h2>AI Symptom Checker</h2>
+
+    <div class="symptom-grid" id="symptomGrid">
+      <button class="symptom-btn">Headache</button>
+      <button class="symptom-btn">Fever</button>
+      <button class="symptom-btn">Cough</button>
+      <button class="symptom-btn">Sore Throat</button>
+      <button class="symptom-btn">Fatigue</button>
+      <button class="symptom-btn">Nausea</button>
+      <button class="symptom-btn">Chest Pain</button>
+      <button class="symptom-btn">Shortness of Breath</button>
+      <button class="symptom-btn">Dizziness</button>
+      <button class="symptom-btn">Back Pain</button>
+      <button class="symptom-btn">Joint Pain</button>
+      <button class="symptom-btn">Rash</button>
+    </div>
+
+    <div class="selected-section">
+      <h3>Selected Symptoms</h3>
+      <div id="selectedSymptoms"></div>
+
+      <p>How severe are your symptoms?</p>
+      <div class="severity-options">
+        <button class="severity-btn" data-level="Mild">Mild</button>
+        <button class="severity-btn" data-level="Moderate">Moderate</button>
+        <button class="severity-btn" data-level="Severe">Severe</button>
+      </div>
+
+      <button class="analyze-btn" id="analyzeBtn">Analyze Symptoms with AI</button>
+    </div>
+  </div>
+
+  <!-- Popup result -->
+  <div class="overlay" id="overlay"></div>
+  <div class="popup" id="popupBox">
+    <h3>AI Analysis Result</h3>
+    <p id="resultText"></p>
+    <button class="close-btn" id="closePopup">Close</button>
+  </div>
+
+  <script>
+    const symptomButtons = document.querySelectorAll('.symptom-btn');
+    const selectedSymptomsContainer = document.getElementById('selectedSymptoms');
+    const severityButtons = document.querySelectorAll('.severity-btn');
+    const analyzeBtn = document.getElementById('analyzeBtn');
+    const popupBox = document.getElementById('popupBox');
+    const overlay = document.getElementById('overlay');
+    const resultText = document.getElementById('resultText');
+    const closePopup = document.getElementById('closePopup');
+
+    let selectedSymptoms = [];
+    let selectedSeverity = '';
+
+    symptomButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const symptom = btn.textContent;
+        btn.classList.toggle('selected');
+        if (selectedSymptoms.includes(symptom)) {
+          selectedSymptoms = selectedSymptoms.filter(s => s !== symptom);
+        } else {
+          selectedSymptoms.push(symptom);
+        }
+        renderSelectedSymptoms();
+      });
+    });
+
+    function renderSelectedSymptoms() {
+      selectedSymptomsContainer.innerHTML = '';
+      selectedSymptoms.forEach(symptom => {
+        const chip = document.createElement('div');
+        chip.className = 'chip';
+        chip.innerHTML = `${symptom} <button onclick="removeSymptom('${symptom}')">&times;</button>`;
+        selectedSymptomsContainer.appendChild(chip);
+      });
+    }
+
+    function removeSymptom(symptom) {
+      selectedSymptoms = selectedSymptoms.filter(s => s !== symptom);
+      document.querySelectorAll('.symptom-btn').forEach(btn => {
+        if (btn.textContent === symptom) btn.classList.remove('selected');
+      });
+      renderSelectedSymptoms();
+    }
+
+    severityButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        severityButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedSeverity = btn.dataset.level;
+      });
+    });
+
+    analyzeBtn.addEventListener('click', () => {
+      if (selectedSymptoms.length === 0) {
+        resultText.textContent = "⚠️ Please select at least one symptom.";
+      } else if (!selectedSeverity) {
+        resultText.textContent = "⚠️ Please choose the severity of your symptoms.";
+      } else {
+        resultText.innerHTML = `
+          Based on your selected symptoms <b>(${selectedSymptoms.join(', ')})</b> 
+          and severity <b>(${selectedSeverity})</b>, <br><br>
+          our AI suggests further screening for possible lung-related issues. 
+          Please consult your doctor for a detailed evaluation.
+        `;
+      }
+      popupBox.style.display = 'block';
+      overlay.style.display = 'block';
+    });
+
+    closePopup.addEventListener('click', () => {
+      popupBox.style.display = 'none';
+      overlay.style.display = 'none';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Video Call</title>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script src="https://resource.zegocloud.com/prebuilt/crypto-js.js"></script>
+    <script src="https://resource.zegocloud.com/prebuilt/prebuiltToken.js"></script>
+    <script src="https://zegocloud.github.io/zegocloud_prebuilt_webrtc/ZegoPrebuilt/index.umd.js"></script>
+
+    <script>
+        // Get room_id from Flask (injected into template)
+        const roomId = "{{ room_id }}";  // Flask dynamically sets this
+
+        // Generate Token for Zego Cloud
+        const TOKEN = generatePrebuiltToken(
+            1191260727,
+            "9488c423d15772cbd89f76bd59461af2",
+            roomId,
+            'UserID-' + Math.random(),
+            'user' + Math.random()
+        );
+
+        const zp = ZegoUIKitPrebuilt.create(TOKEN);
+        zp.joinRoom({
+            container: document.querySelector("#root"),
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lung Predict - Medical Records</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #e0f7fa, #f0fdf4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding-bottom: 40px;
+    }
+    header {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      background-color: #fff;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      padding: 15px 30px;
+    }
+    header img { width: 50px; height: 50px; margin-right: 15px; object-fit:contain; }
+    header h1 { color: #00796b; font-size: 24px; font-weight: 700; margin:0; }
+    .content-box {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 760px;
+      padding: 32px;
+      margin-top: 48px;
+      text-align: left;
+      border-top: 5px solid #009688;
+    }
+    h2 { color: #00796b; margin-bottom: 16px; }
+    .record {
+      background: #f1f8f6;
+      border-left: 4px solid #009688;
+      padding: 14px;
+      border-radius: 10px;
+      margin-bottom: 12px;
+    }
+    .record strong { display:inline-block; width:90px; }
+    .actions {
+      display:flex;
+      gap:12px;
+      justify-content:flex-end;
+      margin-top: 18px;
+    }
+    .back-btn {
+      display: inline-block;
+      background: #009688;
+      color: white;
+      padding: 10px 18px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: 0.3s;
+      border: none;
+      cursor: pointer;
+      font-weight:600;
+    }
+    .back-btn:hover { background: #00796b; }
+
+    .small {
+      font-size: 13px;
+      color: #555;
+      margin-top: 10px;
+    }
+
+    @media (max-width:600px){
+      .record strong { width: 82px; }
+      .actions { justify-content:center; }
+      .content-box { padding:20px; margin-top: 20px; }
+      header{padding:12px 18px}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="../images/lg1.png" alt="Lung Predict Logo" onerror="this.style.display='none'">
+    <h1>Lung Predict</h1>
+  </header>
+
+  <div class="content-box" role="main" aria-labelledby="medical-heading">
+    <h2 id="medical-heading">Medical Records</h2>
+
+    <div class="record" aria-label="Record 1">
+      <div><strong>Test:</strong> Chest X-ray</div>
+      <div><strong>Date:</strong> 01-Oct-2025</div>
+      <div><strong>Result:</strong> Normal lung structure</div>
+    </div>
+
+    <div class="record" aria-label="Record 2">
+      <div><strong>Test:</strong> Sputum Culture</div>
+      <div><strong>Date:</strong> 20-Sep-2025</div>
+      <div><strong>Result:</strong> Negative for infection</div>
+    </div>
+
+    <div class="actions">
+      <!-- JS-backed button that attempts many likely paths and falls back -->
+      <button id="backBtn" class="back-btn" type="button" title="Back to patient dashboard">← Back to Dashboard</button>
+    </div>
+
+    <p class="small"></p>
+  </div>
+
+  <script>
+    (function () {
+      const backBtn = document.getElementById('backBtn');
+
+      // Candidate paths to try (order matters). Update this array if patient.html is stored somewhere else.
+      const candidates = [
+        'patient.html',                              // same directory
+        '../patient.html',                           // parent folder
+        '../patient_dash/patient.html',              // sibling folder (common layout)
+        '/front_end/patient_dash/patient.html',      // the path from your error
+        '/front_end/patient_dash/patient.html',      // duplicate harmless
+        '/patient.html',                             // absolute root
+        './patient.html'                             // explicit current dir
+      ];
+
+      // Try to redirect to the first reachable URL.
+      async function tryRedirectToCandidates(candidatesList) {
+        for (const url of candidatesList) {
+          try {
+            // First try HEAD (lighter). If server rejects HEAD or CORS blocks it, we'll try GET fallback.
+            let ok = false;
+            try {
+              const resp = await fetch(url, { method: 'HEAD' });
+              if (resp && (resp.ok || resp.status === 200)) ok = true;
+              // Some servers respond 405 for HEAD -> try GET below
+              if (resp && (resp.status === 405 || resp.status === 501)) {
+                const resp2 = await fetch(url, { method: 'GET' });
+                if (resp2 && resp2.ok) ok = true;
+              }
+            } catch (headErr) {
+              // HEAD may fail because of CORS or server restrictions — attempt GET
+              try {
+                const respGet = await fetch(url, { method: 'GET' });
+                if (respGet && respGet.ok) ok = true;
+              } catch (getErr) {
+                // ignore and try next candidate
+              }
+            }
+
+            if (ok) {
+              window.location.href = url;
+              return;
+            }
+          } catch (e) {
+            // ignore and try next candidate
+          }
+        }
+
+        // No candidate worked. Use history.back() if possible, else show a helpful alert.
+        if (document.referrer) {
+          history.back();
+        } else {
+          alert(
+            'Could not locate patient.html at expected paths.\n' +
+            'Check the correct file path or open the dashboard manually.\n' +
+            'Suggested path to verify: front_end/patient_dash/patient.html'
+          );
+        }
+      }
+
+      backBtn.addEventListener('click', function () {
+        tryRedirectToCandidates(candidates);
+      });
+
+      // Optional: allow Ctrl+Click to open the most likely path directly (useful during dev)
+      backBtn.addEventListener('auxclick', function (e) {
+        if (e.button === 1) {
+          // middle click -> open in new tab the most likely candidate
+          window.open(candidates[0], '_blank');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

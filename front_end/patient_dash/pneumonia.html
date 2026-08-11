@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lung Predict - Pneumonia Detection</title>
+    <style>
+        body {
+            background-color: #e6f7f6;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            margin: 80px auto;
+            background: #fff;
+            padding: 30px;
+            width: 480px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        h2 { color: #00897b; }
+        .result {
+            margin-top: 20px;
+            background: #e0f2f1;
+            padding: 15px;
+            border-radius: 10px;
+        }
+        button {
+            background-color: #009688;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin-top: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover { background-color: #00796b; }
+        img {
+            width: 100%;
+            max-width: 300px;
+            margin-top: 15px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Pneumonia Detection</h2>
+        <p>Upload a chest X-ray image to detect lung disease.</p>
+
+        <form action="/predict" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" required>
+            <br><br>
+            <button type="submit">Upload</button>
+        </form>
+
+        {% if filename %}
+            <img src=" " alt="Uploaded X-ray">
+        {% endif %}
+
+        {% if prediction %}
+            <div class="result">
+                <b>Prediction:</b> {{ prediction }} <br>
+                <b>Confidence:</b> {{ confidence }}%
+            </div>
+        {% endif %}
+
+        <p style="margin-top: 40px; font-size: 12px; color: #777;">
+            © 2025 Lung Predict | Powered by AI Diagnostics
+        </p>
+    </div>
+</body>
+</html>

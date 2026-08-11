@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lung Cancer Detection</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Background with an Image */
+        body {
+            background: url('static/cook.jpg') no-repeat center center/cover;
+            text-align: center;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            position: relative;
+        }
+
+        h1 {
+            color: #fff;
+        }
+
+        .container {
+            max-width: 600px;
+            padding: 30px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.18); /* Glassmorphism Effect */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            transition: all 0.3s ease-in-out;
+        
+            /* Move slightly to the left */
+            margin-right: -10%; /* Adjust this value to move it more or less */
+        }
+        /* Hover effect for slight interactivity */
+        .container:hover {
+            transform: scale(1.02);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+        }
+        
+
+        input[type="file"] {
+            margin: 10px 0;
+        }
+
+        button {
+            padding: 12px 18px;
+            border: none;
+            background: #007bff;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: #0056b3;
+            transform: scale(1.05);
+        }
+
+        .result {
+            margin-top: 20px;
+        }
+
+        .image-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .image-container img {
+            max-width: 250px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+
+        /* Home Button - Top Right */
+        .home-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            text-decoration: none;
+            background: linear-gradient(135deg, #ff6b6b, #ff4757);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+    
+        .home-button:hover {
+            background: linear-gradient(135deg, #ff4757, #e84118);
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+        }
+    
+        /* Appointments Button - Bottom Center */
+        .appointments-button {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-decoration: none;
+            background: linear-gradient(135deg, #28a745, #218838);
+            color: white;
+            padding: 14px 24px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+    
+        .appointments-button:hover {
+            background: linear-gradient(135deg, #218838, #1e7e34);
+            
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="home-button">Home</a>
+
+    <!-- Appointments Button (Bottom Center) -->
+    <a href="appointments.html" class="appointments-button">Appointments</a>
+    <h1>Lung Cancer Detection</h1>
+    <div class="container">
+        <input type="file" id="fileInput" accept="image/*">
+        <button onclick="uploadImage()">Predict</button>
+        <div id="error" class="error"></div>
+        <div class="result">
+            <h3 id="predictionText"></h3>
+            <div class="image-container">
+                <div>
+                    <h4>Uploaded Image</h4>
+                    <img id="uploadedImg" src="" alt="Uploaded Image" style="display: none;">
+                </div>
+                <div>
+                    <h4>Processed Image</h4>
+                    <img id="processedImg" src="" alt="Processed Image" style="display: none;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function uploadImage() {
+            var fileInput = document.getElementById("fileInput");
+            var errorDiv = document.getElementById("error");
+            var predictionText = document.getElementById("predictionText");
+            var uploadedImg = document.getElementById("uploadedImg");
+            var processedImg = document.getElementById("processedImg");
+
+            // Clear previous results
+            errorDiv.innerText = "";
+            predictionText.innerText = "";
+            uploadedImg.style.display = "none";
+            processedImg.style.display = "none";
+
+            if (!fileInput.files.length) {
+                errorDiv.innerText = "Please upload an image!";
+                return;
+            }
+
+            var formData = new FormData();
+            formData.append("file", fileInput.files[0]);
+
+            $.ajax({
+                url: "/lung_cancer/predict",
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    predictionText.innerText = `Prediction: ${response.prediction} (${response.confidence}%)`;
+
+                    uploadedImg.src = response.uploaded_img;
+                    uploadedImg.style.display = "block";
+
+                    processedImg.src = response.processed_img;
+                    processedImg.style.display = "block";
+                },
+                error: function() {
+                    errorDiv.innerText = "Error processing the image. Try again.";
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,78 @@
+/* Reset styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body styles */
+body {
+    height: 100vh;
+    background: url('Pulmonology.jpg') no-repeat center center/cover;
+    margin: 0;
+}
+/* Header styles */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+/* Logo */
+
+/* Logo container */
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+}
+
+/* Logo image */
+.logo img {
+    width: 100px; /* Adjust size as needed */
+    height: auto;
+    border-radius: 30%;
+}
+
+/* Profile button */
+#profile-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+#profile-pic {
+    width: 100px; /* Adjust size as needed */
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover; /* Ensures the image fits well inside the circle */
+}
+/* Navigation styles */
+nav {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+nav ul li {
+    display: inline;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color:whitesmoke;
+    font-weight: bold;
+    font-size: 24px;
+}
+
+nav ul li a:hover {
+    color: #007bff;
+}

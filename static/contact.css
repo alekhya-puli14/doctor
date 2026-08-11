@@ -1,0 +1,92 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    height: 100vh;
+    background-image: url('neru.jpg'); /* Background image */
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    position: relative; /* Ensures absolute elements align properly */
+    color: #fff;
+}
+.home-button {
+     /* Keeps it at the top even when scrolling */
+    top: 130px; /* Distance from the top */
+    left: 20px;
+    position:relative;
+}
+/* Contact Form Container - Slightly Left-Centered */
+.contact-container {
+    position: absolute;
+    top: 30%;
+    left: 55%; /* Moves it towards left-center */
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent background */
+    padding: 40px;
+    border-radius: 10px;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Heading - Top Left */
+h2 {
+    position: absolute;
+    top: 20px;  /* Adjust top spacing */
+    left: 20px; /* Adjust left spacing */
+    font-size: 2rem;
+    color: green;
+    font-weight: bold;
+    padding: 10px;
+    width: max-content;
+}
+
+/* Form Fields */
+input[type="text"],
+input[type="email"],
+textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    background-color: #fff;
+    color: #333;
+}
+
+/* Submit Button */
+button {
+    background-color: #4CAF50; /* Green */
+    color: #fff;
+    padding: 15px;
+    border: none;
+    border-radius: 5px;
+    width: 100%;
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .contact-container {
+        width: 90%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+}

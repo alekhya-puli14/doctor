@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: azure;
+        }
+        .chat-container {
+            background: rgb(185, 176, 242);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        #chatbox {
+            height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ffffff;
+            border-radius: 5px;
+        }
+        .message {
+            margin: 10px 0;
+            padding: 12px;
+            border-radius: 5px;
+            max-width: 70%;
+            word-wrap: break-word;
+        }
+        .user-message {
+            background: #ffffff;
+            color: rgb(13, 12, 12);
+            margin-left: auto;
+        }
+        .bot-message {
+            background: #ffffff;
+            margin-right: auto;
+        }
+        .input-container {
+            display: flex;
+            gap: 10px;
+        }
+        #userInput {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #d49cff;
+            border-radius: 5px;
+            font-size: 16px;
+            outline: none;
+        }
+        #userInput:focus {
+            border-color: #55c7f0;
+        }
+        button {
+            padding: 12px 24px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background: #b7d7f9;
+        }
+        .error-message {
+            color: #dc3545;
+            margin-top: 10px;
+            text-align: center;
+        }
+        .home-button {
+            position: absolute;  /* Absolute positioning */
+            top: 20px;  /* Distance from the top */
+            right: 3%;  /* Distance from the right */
+            padding: 10px 2%;  /* Button padding */
+            font-size: 16px;  /* Text size */
+            background-color: #007BFF;  /* Blue background */
+            color: white;  /* White text */
+            border: none;  /* Remove border */
+            border-radius: 5px;  /* Rounded corners */
+            cursor: pointer;  /* Pointer cursor */
+        }
+
+        /* Button hover effect */
+        .home-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+   
+</head>
+<body>
+    <div class="chat-container">
+        <h1>Respira Chatbot</h1>
+        <div id="chatbox">
+            <div class="message bot-message">Hello! Welcome to Respira 🫁🩺</div>
+        </div>
+        <div class="input-container">
+            <input type="text" id="userInput" placeholder="Type your message..." autocomplete="off">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+        <div id="error" class="error-message"></div>
+    </div>
+    <a href="/home">
+      <button class="home-button">Home</button>
+  </a>
+
+    
+
+    <script>
+        const chatbox = document.getElementById("chatbox");
+        const userInput = document.getElementById("userInput");
+        const errorDiv = document.getElementById("error");
+
+        function addMessage(message, isUser) {
+            const messageDiv = document.createElement("div");
+            messageDiv.className = `message ${isUser ? "user-message" : "bot-message"}`;
+            messageDiv.textContent = message;
+            chatbox.appendChild(messageDiv);
+            chatbox.scrollTop = chatbox.scrollHeight;
+        }
+
+        async function sendMessage() {
+            const message = userInput.value.trim();
+            if (!message) return;
+
+            // Clear any previous errors
+            errorDiv.textContent = "";
+            
+            // Add user message and clear input
+            addMessage(message, true);
+            userInput.value = "";
+
+            try {
+                const formData = new FormData();
+                formData.append("message", message);
+
+                const response = await fetch("/get_response", {
+                    method: "POST",
+                    body: formData
+                });
+
+                const data = await response.json();
+                
+                if (response.ok && data.response) {
+                    addMessage(data.response, false);
+                } else {
+                    throw new Error(data.error || "Failed to get response");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                errorDiv.textContent = "Sorry, there was an error processing your message.";
+            }
+        }
+
+        // Handle Enter key
+        userInput.addEventListener("keypress", function(e) {
+            if (e.key === "Enter") {
+                sendMessage();
+            }
+        });
+
+        // Focus input on page load
+        window.addEventListener("load", function() {
+            userInput.focus();
+        });
+    </script>
+</body>
+</html>
